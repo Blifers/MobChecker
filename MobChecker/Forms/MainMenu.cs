@@ -8,11 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using MobChecker.Classes;
 namespace MobChecker
 {
     public partial class MainMenu : Form
     {
+        private Manager Manager = new Manager();
+
         public MainMenu()
         {
             InitializeComponent();
@@ -21,28 +23,24 @@ namespace MobChecker
         private void UploadButton_Click(object sender, EventArgs e)
         {
             ofdUpload.ShowDialog();
-            int t = 0;
-            /*foreach (string file in ofdUpload.FileNames)
-            {
-                MessageBox.Show(file);
-                //Filename Contains full path to the file with the extension
-            }*/
 
-            //Can't do this cause the multiselect is on... but for test
-            using(var reader = new StreamReader(ofdUpload.FileName))
+            if (ofdUpload.FileNames.Count() == 0)
+                return;
+            else if (ofdUpload.FileNames.Count() == 1)
             {
-                List<string> Values = new List<string>();
-                
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    var values = line.Split(';');
-                    if (t == 0)
-                        MessageBox.Show(values[2]);
-                    t++;
-                }
+                if (!Manager.UploadFile(ofdUpload.FileNames))
+                    MessageBox.Show("Файл не были загружены!");
             }
+            else if (ofdUpload.FileNames.Count() > 1)
+            {
+                if (!Manager.UploadFile(ofdUpload.FileNames))
+                    MessageBox.Show("Файлы не были загружены!");
+            }
+        }
 
+        private void btnGetFailures_Click(object sender, EventArgs e)
+        {
+            rtbFailures.Text = Manager.GetAllFailures();
         }
     }
 }

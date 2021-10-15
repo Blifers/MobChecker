@@ -45,30 +45,32 @@ namespace MobChecker.Classes
 
         public void FillData (string [] playerInfo)
         {
-            FillData(playerInfo);
+            FillClass(playerInfo);
         }
 
         private void FillClass(string[] playerInfo)
         {
+            
             try
             {
                 UserID = Convert.ToInt64(playerInfo[0]);
                 NickName = playerInfo[1];
+                
                 Total = Convert.ToInt32(playerInfo[2]);
                 Hunt = Convert.ToInt32(playerInfo[3]);
                 Purchase = Convert.ToInt32(playerInfo[4]);
-                Tier1Mob = Convert.ToInt32(playerInfo[5]);
-                Tier2Mob = Convert.ToInt32(playerInfo[6]);
-                Tier3Mob = Convert.ToInt32(playerInfo[7]);
-                Tier4Mob = Convert.ToInt32(playerInfo[8]);
-                Tier5Mob = Convert.ToInt32(playerInfo[9]);
-                Tier1Purchase = Convert.ToInt32(playerInfo[10]);
-                Tier2Purchase = Convert.ToInt32(playerInfo[11]);
-                Tier3Purchase = Convert.ToInt32(playerInfo[12]);
-                Tier4Purchase = Convert.ToInt32(playerInfo[13]);
-                Tier5Purchase = Convert.ToInt32(playerInfo[14]);
-                Points = Convert.ToInt32(playerInfo[15]);
-                GoalPercentage = playerInfo[16];
+                Tier1Mob = Convert.ToInt32(playerInfo[6]);
+                Tier2Mob = Convert.ToInt32(playerInfo[7]);
+                Tier3Mob = Convert.ToInt32(playerInfo[8]);
+                Tier4Mob = Convert.ToInt32(playerInfo[9]);
+                Tier5Mob = Convert.ToInt32(playerInfo[10]);
+                Tier1Purchase = Convert.ToInt32(playerInfo[12]);
+                Tier2Purchase = Convert.ToInt32(playerInfo[13]);
+                Tier3Purchase = Convert.ToInt32(playerInfo[14]);
+                Tier4Purchase = Convert.ToInt32(playerInfo[15]);
+                Tier5Purchase = Convert.ToInt32(playerInfo[16]);
+                Points = Convert.ToInt32(playerInfo[18]);
+                GoalPercentage = playerInfo[19];
             }
             catch (Exception e)
             {
@@ -106,7 +108,13 @@ namespace MobChecker.Classes
 
         public string FailureCheck(int days)
         {
+            if ((Convert.ToDouble(Points) / days) < 6)
+                return NickName + " - " + Convert.ToString(Points) + " очков. " +
+                "1 лвл - " + Convert.ToString(Tier1Mob) + " шт. " +
+                "2 лвл - " + Convert.ToString(Tier2Mob) + " шт. " +
+                "3 лвл - " + Convert.ToString(Tier3Mob) + " шт. " + "\n";
             return "";
         }
+
     }
 }
