@@ -33,6 +33,7 @@ namespace MobChecker
             this.UploadButton = new System.Windows.Forms.Button();
             this.btnGetFailures = new System.Windows.Forms.Button();
             this.rtbFailures = new System.Windows.Forms.RichTextBox();
+            this.btnExcel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // ofdUpload
@@ -76,11 +77,24 @@ namespace MobChecker
             this.rtbFailures.TabIndex = 2;
             this.rtbFailures.Text = "";
             // 
+            // btnExcel
+            // 
+            this.btnExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnExcel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnExcel.Location = new System.Drawing.Point(457, 1014);
+            this.btnExcel.Name = "btnExcel";
+            this.btnExcel.Size = new System.Drawing.Size(400, 42);
+            this.btnExcel.TabIndex = 3;
+            this.btnExcel.Text = "Excel";
+            this.btnExcel.UseVisualStyleBackColor = true;
+            this.btnExcel.Click += new System.EventHandler(this.btnExcel_Click);
+            // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1308, 1068);
+            this.Controls.Add(this.btnExcel);
             this.Controls.Add(this.rtbFailures);
             this.Controls.Add(this.btnGetFailures);
             this.Controls.Add(this.UploadButton);
@@ -97,6 +111,7 @@ namespace MobChecker
         private System.Windows.Forms.Button UploadButton;
         private System.Windows.Forms.Button btnGetFailures;
         private System.Windows.Forms.RichTextBox rtbFailures;
+        private System.Windows.Forms.Button btnExcel;
     }
 }
 

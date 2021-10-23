@@ -9,6 +9,8 @@ namespace MobChecker.Classes
 {
     class PlayerHunt
     {
+        private int Days = 0;
+        
         private long UserID;
         private string NickName;
         private int Total;
@@ -71,6 +73,7 @@ namespace MobChecker.Classes
                 Tier5Purchase = Convert.ToInt32(playerInfo[16]);
                 Points = Convert.ToInt32(playerInfo[18]);
                 GoalPercentage = playerInfo[19];
+                Days++;
             }
             catch (Exception e)
             {
@@ -90,31 +93,70 @@ namespace MobChecker.Classes
 
         private void AddHuntStats(string [] playerInfo)
         {
-            Total += Convert.ToInt32(playerInfo[2]);
-            Hunt += Convert.ToInt32(playerInfo[3]);
-            Purchase += Convert.ToInt32(playerInfo[4]);
-            Tier1Mob += Convert.ToInt32(playerInfo[5]);
-            Tier2Mob += Convert.ToInt32(playerInfo[6]);
-            Tier3Mob += Convert.ToInt32(playerInfo[7]);
-            Tier4Mob += Convert.ToInt32(playerInfo[8]);
-            Tier5Mob += Convert.ToInt32(playerInfo[9]);
-            Tier1Purchase += Convert.ToInt32(playerInfo[10]);
-            Tier2Purchase += Convert.ToInt32(playerInfo[11]);
-            Tier3Purchase += Convert.ToInt32(playerInfo[12]);
-            Tier4Purchase += Convert.ToInt32(playerInfo[13]);
-            Tier5Purchase += Convert.ToInt32(playerInfo[14]);
-            Points += Convert.ToInt32(playerInfo[15]);
+            try
+            {
+                Total += Convert.ToInt32(playerInfo[2]);
+                Hunt += Convert.ToInt32(playerInfo[3]);
+                Purchase += Convert.ToInt32(playerInfo[4]);
+                Tier1Mob += Convert.ToInt32(playerInfo[6]);
+                Tier2Mob += Convert.ToInt32(playerInfo[7]);
+                Tier3Mob += Convert.ToInt32(playerInfo[8]);
+                Tier4Mob += Convert.ToInt32(playerInfo[9]);
+                Tier5Mob += Convert.ToInt32(playerInfo[10]);
+                Tier1Purchase += Convert.ToInt32(playerInfo[12]);
+                Tier2Purchase += Convert.ToInt32(playerInfo[13]);
+                Tier3Purchase += Convert.ToInt32(playerInfo[14]);
+                Tier4Purchase += Convert.ToInt32(playerInfo[15]);
+                Tier5Purchase += Convert.ToInt32(playerInfo[16]);
+                Points += Convert.ToInt32(playerInfo[18]);
+                Days++;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
-        public string FailureCheck(int days)
+        public string FailureCheck()
         {
-            if ((Convert.ToDouble(Points) / days) < 6)
-                return NickName + " - " + Convert.ToString(Points) + " очков. " +
-                "1 лвл - " + Convert.ToString(Tier1Mob) + " шт. " +
-                "2 лвл - " + Convert.ToString(Tier2Mob) + " шт. " +
-                "3 лвл - " + Convert.ToString(Tier3Mob) + " шт. " + "\n";
+            if ((Convert.ToDouble(Points) / Days) < 6)
+                return GetMobInfo();
             return "";
         }
 
+        public long GetID()
+        {
+            return UserID;
+        }
+
+        public string GetNickName()
+        {
+            return NickName;
+        }
+
+        public string GetMobInfo()
+        {
+            return NickName + " - " + Convert.ToString(Points) + " из " + Convert.ToString(6 * Days) + " очков. " +
+            "1 лвл - " + Convert.ToString(Tier1Mob) + " шт. " +
+            "2 лвл - " + Convert.ToString(Tier2Mob) + " шт. " +
+            "3 лвл - " + Convert.ToString(Tier3Mob) + " шт. " + "За " + Convert.ToString(Days) + " дней.\n";
+        }
+
+        public string [] GetExcelInfo()
+        {
+            string[] rtnArray = new string[9];
+
+            rtnArray[0] = Convert.ToString(UserID);
+            rtnArray[1] = Convert.ToString(NickName);
+            rtnArray[2] = Convert.ToString(Hunt);
+            rtnArray[3] = Convert.ToString(Tier1Mob);
+            rtnArray[4] = Convert.ToString(Tier2Mob);
+            rtnArray[5] = Convert.ToString(Tier3Mob);
+            rtnArray[6] = Convert.ToString(Tier4Mob);
+            rtnArray[7] = Convert.ToString(Tier5Mob);
+            rtnArray[8] = Convert.ToString(Points);
+
+            return rtnArray;
+        }
     }
 }

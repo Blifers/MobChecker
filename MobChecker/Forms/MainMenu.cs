@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MobChecker.Classes;
+
 namespace MobChecker
 {
     public partial class MainMenu : Form
@@ -29,7 +23,7 @@ namespace MobChecker
             else if (ofdUpload.FileNames.Count() == 1)
             {
                 if (!Manager.UploadFile(ofdUpload.FileNames))
-                    MessageBox.Show("Файл не были загружены!");
+                    MessageBox.Show("Файл не был загружен!");
             }
             else if (ofdUpload.FileNames.Count() > 1)
             {
@@ -41,6 +35,11 @@ namespace MobChecker
         private void btnGetFailures_Click(object sender, EventArgs e)
         {
             rtbFailures.Text = Manager.GetAllFailures();
+        }
+
+        private void btnExcel_Click(object sender, EventArgs e)
+        {
+            Manager.FormExcel();
         }
     }
 }
