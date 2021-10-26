@@ -12,6 +12,7 @@ namespace MobChecker
         public MainMenu()
         {
             InitializeComponent();
+            Manager.UploadTwinBots();
         }
 
         private void UploadButton_Click(object sender, EventArgs e)

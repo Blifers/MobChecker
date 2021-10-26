@@ -32,8 +32,16 @@ namespace MobChecker.Classes
         private int Tier5Purchase;
 
         private int Points;
-        private string GoalPercentage; // ?
+        private string GoalPercentage;
 
+        public enum Status:int
+        {
+            Player = 1,
+            Twin = 2,
+            Bot = 3
+        }
+
+        private Status PlayerStatus;
 
         public PlayerHunt(string [] playerInfo)
         {
@@ -157,6 +165,22 @@ namespace MobChecker.Classes
             rtnArray[8] = Convert.ToString(Points);
 
             return rtnArray;
+        }
+
+        public void SetStatus(Status status)
+        {
+            if (Status.Bot != status && Status.Twin != status)
+                status = Status.Player;
+
+            PlayerStatus = status;
+        }
+
+        public Status GetStatus()
+        {
+            if (PlayerStatus != Status.Player && PlayerStatus != Status.Bot && PlayerStatus != Status.Twin)
+                return Status.Player;
+            else
+                return PlayerStatus;
         }
     }
 }
