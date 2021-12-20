@@ -10,7 +10,9 @@ namespace MobChecker.Classes
     class PlayerHunt
     {
         private int Days = 0;
-        
+
+        public bool AddedInDay = false;
+
         private long UserID;
         private string NickName;
         private int Total;
@@ -100,7 +102,7 @@ namespace MobChecker.Classes
         }
 
         private void AddHuntStats(string [] playerInfo)
-        {
+        {          
             try
             {
                 Total += Convert.ToInt32(playerInfo[2]);
@@ -117,7 +119,8 @@ namespace MobChecker.Classes
                 Tier4Purchase += Convert.ToInt32(playerInfo[15]);
                 Tier5Purchase += Convert.ToInt32(playerInfo[16]);
                 Points += Convert.ToInt32(playerInfo[18]);
-                Days++;
+                if (!AddedInDay)
+                    Days++;
             }
             catch (Exception e)
             {
@@ -152,7 +155,7 @@ namespace MobChecker.Classes
 
         public string [] GetExcelInfo()
         {
-            string[] rtnArray = new string[9];
+            string[] rtnArray = new string[10];
 
             rtnArray[0] = Convert.ToString(UserID);
             rtnArray[1] = Convert.ToString(NickName);
@@ -163,6 +166,7 @@ namespace MobChecker.Classes
             rtnArray[6] = Convert.ToString(Tier4Mob);
             rtnArray[7] = Convert.ToString(Tier5Mob);
             rtnArray[8] = Convert.ToString(Points);
+            rtnArray[9] = Convert.ToString(Days);
 
             return rtnArray;
         }
@@ -181,6 +185,15 @@ namespace MobChecker.Classes
                 return Status.Player;
             else
                 return PlayerStatus;
+        }
+
+        public void ReCalcPoints()
+        {
+            Points = Tier1Mob * Properties.Settings.Default.FirstLvlPoints
+                     + Tier2Mob * Properties.Settings.Default.SecondLvlPoints
+                     + Tier3Mob * Properties.Settings.Default.ThirdLvlPoints
+                     + Tier4Mob * Properties.Settings.Default.FourthLvlPoints
+                     + Tier5Mob * Properties.Settings.Default.FifthLvlPoints;
         }
     }
 }

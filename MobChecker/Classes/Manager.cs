@@ -26,11 +26,41 @@ namespace MobChecker.Classes
         {
             string rtnValue;
             string[] datesArr = Dates.Split(',');
+            string[] day;
+            int dayToChange;
+            int lastDayToChange;
+            //if (datesArr.Length < 2)
+            //    rtnValue = Convert.ToString(Convert.ToInt32(datesArr[0]) - 1);
+            //else
+            //    rtnValue = "Период отчета: с " + Convert.ToString(Convert.ToInt32(datesArr[0]) - 1) + " по " + Convert.ToString(Convert.ToInt32(datesArr[datesArr.Length - 2]) - 1);
+
 
             if (datesArr.Length < 2)
+            {
                 rtnValue = datesArr[0];
+                day = rtnValue.Split('-');
+                dayToChange = Convert.ToInt32(day[0]);
+                dayToChange--;
+                rtnValue = rtnValue.Substring(0, 2);
+                rtnValue = Convert.ToString(dayToChange) + rtnValue;
+            }
             else
+            {
                 rtnValue = "Период отчета: с " + datesArr[0] + " по " + datesArr[datesArr.Length - 2];
+                MessageBox.Show(rtnValue);
+                MessageBox.Show(Convert.ToString(rtnValue.IndexOf('с')));
+                MessageBox.Show(Convert.ToString(rtnValue.IndexOf("по")));
+                day = rtnValue.Split('-');
+                dayToChange = Convert.ToInt32(day[0]);
+                dayToChange--;
+                lastDayToChange = Convert.ToInt32(day[1]);
+                lastDayToChange--;
+                rtnValue = rtnValue.Substring(16, 2);
+                rtnValue = Convert.ToString(dayToChange) + rtnValue;
+                rtnValue = rtnValue.Substring(25, 2);
+                rtnValue = rtnValue.Insert(25, Convert.ToString(lastDayToChange));
+                
+            }
 
             return rtnValue;
         }
@@ -38,6 +68,11 @@ namespace MobChecker.Classes
         public void FormExcel()
         {
             SetStatuses();
+
+            foreach (var player in Players)
+            {
+                player.ReCalcPoints();
+            }
 
             //Добавить проверки??
             Microsoft.Office.Interop.Excel.Application application;
@@ -57,12 +92,12 @@ namespace MobChecker.Classes
 
                 worksheet.Cells[1, 1] = GetDatePeriod();
                 worksheet.Cells[2, 1] = "Суммарно отчет за: " + Convert.ToString(Days) + " дней";
-
-                worksheet.Cells[2, 5] = "0 Очков";
-                worksheet.Cells[2, 6] = "2 Очка";
-                worksheet.Cells[2, 7] = "2 Очка";
-                worksheet.Cells[2, 8] = "4 Очка";
-                worksheet.Cells[2, 9] = "4 Очка";
+                worksheet.Cells[2, 4] = "Очки:";
+                worksheet.Cells[2, 5] = Convert.ToString(Properties.Settings.Default.FirstLvlPoints);
+                worksheet.Cells[2, 6] = Convert.ToString(Properties.Settings.Default.SecondLvlPoints);
+                worksheet.Cells[2, 7] = Convert.ToString(Properties.Settings.Default.ThirdLvlPoints);
+                worksheet.Cells[2, 8] = Convert.ToString(Properties.Settings.Default.FourthLvlPoints);
+                worksheet.Cells[2, 9] = Convert.ToString(Properties.Settings.Default.FifthLvlPoints);
 
                 worksheet.Cells[3, 2] = "IGG ID";
                 worksheet.Cells[3, 3] = "Никнейм";
@@ -80,7 +115,7 @@ namespace MobChecker.Classes
                 foreach (var player in Players)
                 {
                     string[] values = player.GetExcelInfo();
-                    if (player.GetStatus() == PlayerHunt.Status.Player && Convert.ToDouble(values[8]) / (double)Days >= 6)
+                    if (player.GetStatus() == PlayerHunt.Status.Player && Convert.ToDouble(values[8]) / Convert.ToDouble(values[9]) >= Properties.Settings.Default.NeededPoints)
                     {
                         worksheet.Cells[row, 2] = values[0];
                         worksheet.Cells[row, 3] = values[1];
@@ -91,10 +126,10 @@ namespace MobChecker.Classes
                         worksheet.Cells[row, 8] = values[6];
                         worksheet.Cells[row, 9] = values[7];
                         worksheet.Cells[row, 10] = values[8];
-                        worksheet.Cells[row, 11] = Convert.ToString(Days);
-                        worksheet.Cells[row, 12] = Convert.ToDouble(values[8]) / (double)Days;
+                        worksheet.Cells[row, 11] = values[9];
+                        worksheet.Cells[row, 12] = Convert.ToDouble(values[8]) / Convert.ToDouble(values[9]);
 
-                        worksheet.get_Range("B" + row.ToString(), "L" + row.ToString()).Interior.Color = System.Drawing.Color.FromArgb(0, 255, 10);
+                        worksheet.get_Range("B" + row.ToString(), "L" + row.ToString()).Interior.Color = System.Drawing.Color.FromArgb(159, 254, 176);
 
                         row++;
                     }
@@ -103,7 +138,7 @@ namespace MobChecker.Classes
                 foreach (var player in Players)
                 {
                     string[] values = player.GetExcelInfo();
-                    if (player.GetStatus() == PlayerHunt.Status.Player && Convert.ToDouble(values[8]) / (double)Days < 6)
+                    if (player.GetStatus() == PlayerHunt.Status.Player && Convert.ToDouble(values[8]) / Convert.ToDouble(values[9]) < Properties.Settings.Default.NeededPoints)
                     {
                         worksheet.Cells[row, 2] = values[0];
                         worksheet.Cells[row, 3] = values[1];
@@ -114,10 +149,10 @@ namespace MobChecker.Classes
                         worksheet.Cells[row, 8] = values[6];
                         worksheet.Cells[row, 9] = values[7];
                         worksheet.Cells[row, 10] = values[8];
-                        worksheet.Cells[row, 11] = Convert.ToString(Days);
-                        worksheet.Cells[row, 12] = Convert.ToDouble(values[8]) / (double)Days;
+                        worksheet.Cells[row, 11] = values[9];
+                        worksheet.Cells[row, 12] = Convert.ToDouble(values[8]) / Convert.ToDouble(values[9]);
 
-                        worksheet.get_Range("B" + row.ToString(), "L" + row.ToString()).Interior.Color = System.Drawing.Color.FromArgb(200, 36, 0);
+                        worksheet.get_Range("B" + row.ToString(), "L" + row.ToString()).Interior.Color = System.Drawing.Color.FromArgb(253, 124, 110);
 
 
                         row++;
@@ -139,8 +174,8 @@ namespace MobChecker.Classes
                         worksheet.Cells[row, 8] = values[6];
                         worksheet.Cells[row, 9] = values[7];
                         worksheet.Cells[row, 10] = values[8];
-                        worksheet.Cells[row, 11] = Convert.ToString(Days);
-                        worksheet.Cells[row, 12] = Convert.ToDouble(values[8]) / (double)Days;
+                        worksheet.Cells[row, 11] = values[9];
+                        worksheet.Cells[row, 12] = Convert.ToDouble(values[8]) / Convert.ToDouble(values[9]);
 
                         row++;
                     }
@@ -161,8 +196,8 @@ namespace MobChecker.Classes
                         worksheet.Cells[row, 8] = values[6];
                         worksheet.Cells[row, 9] = values[7];
                         worksheet.Cells[row, 10] = values[8];
-                        worksheet.Cells[row, 11] = Convert.ToString(Days);
-                        worksheet.Cells[row, 12] = Convert.ToDouble(values[8]) / (double)Days;
+                        worksheet.Cells[row, 11] = values[9];
+                        worksheet.Cells[row, 12] = Convert.ToDouble(values[8]) / Convert.ToDouble(values[9]);
 
                         worksheet.get_Range("B" + row.ToString(), "L" + row.ToString()).Interior.Color = System.Drawing.Color.FromArgb(128, 128, 128);
 
@@ -222,9 +257,8 @@ namespace MobChecker.Classes
                 if (amount == 1)
                 {
                     FillClasses(filenames[0]);
-
                     filename = filenames[0].Split('\\');
-                    Dates += filename[filename.Length - 1].Substring(0, 5) + ",";
+                    Dates += filename[filename.Length - 1].Substring(5, 5) + ",";
                     if (Players.Count > 0)
                         Uploaded = true;
                     
@@ -234,14 +268,14 @@ namespace MobChecker.Classes
                 {
                     FillClasses(filenames[0]);
                     filename = filenames[0].Split('\\');
-                    Dates += filename[filename.Length - 1].Substring(0, 5) + ",";
+                    Dates += filename[filename.Length - 1].Substring(5, 5) + ",";
                     for (int i = 1; i < amount; i++)
                     {
                         AddToClasses(filenames[i], Players);
                         filename = filenames[i].Split('\\');
-                        Dates += filename[filename.Length - 1].Substring(0, 5) + ",";
+                        Dates += filename[filename.Length - 1].Substring(5, 5) + ",";
+                        UpdateAdded();
                     }
-
                     if (Players.Count > 0)
                         Uploaded = true;
 
@@ -270,7 +304,14 @@ namespace MobChecker.Classes
                     var line = reader.ReadLine();
                     var values = line.Split(';');
 
-                    if (counter > 1)
+                    if (Players.Find(x => x.GetID() == Convert.ToInt64(values[0])) != null && counter > 1)
+                    {
+                        var player = Players.Find(x => x.GetID() == Convert.ToInt64(values[0]));
+
+                        player.AddData(values);
+                        player.AddedInDay = true;
+                    }
+                    else if (counter > 1)
                     {
                         playerHunt = new PlayerHunt(values);
                         Players.Add(playerHunt);
@@ -291,25 +332,35 @@ namespace MobChecker.Classes
                     var line = reader.ReadLine();
                     var values = line.Split(';');
 
-                    foreach (var player in players)
-                    {
-                        if (counter > 1)
+                    if (counter > 1)
+                    {   
+                        if (Players.Find(x => x.GetID() == Convert.ToInt64(values[0])) != null)
                         {
-                            if (Convert.ToInt64(values[0]) == player.GetID())
-                            {
-                                player.AddData(values);
-                                playerFound = true; 
-                            }
+                            var player = Players.Find(x => x.GetID() == Convert.ToInt64(values[0]));
+                            player.AddData(values);
+                            player.AddedInDay = true;
+                            playerFound = true;
                         }
                     }
+
                     if (playerFound == false && counter > 1)
                     {
                         PlayerHunt playerHunt = new PlayerHunt(values);
+                        playerHunt.AddedInDay = true;
                         Players.Add(playerHunt);
                     }
+
                     playerFound = false;
                     counter++;
                 }
+            }
+        }
+
+        private void UpdateAdded()
+        {
+            foreach (var player in Players)
+            {
+                player.AddedInDay = false;
             }
         }
 

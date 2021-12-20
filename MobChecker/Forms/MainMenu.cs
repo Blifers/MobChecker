@@ -35,7 +35,9 @@ namespace MobChecker
 
         private void btnGetFailures_Click(object sender, EventArgs e)
         {
-            rtbFailures.Text = Manager.GetAllFailures();
+            //rtbFailures.Text = Manager.GetAllFailures();
+            Forms.Settings f = new Forms.Settings();
+            f.ShowDialog();
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
