@@ -27,39 +27,36 @@ namespace MobChecker.Classes
             string rtnValue;
             string[] datesArr = Dates.Split(',');
             string[] day;
+            string date;
             int dayToChange;
-            int lastDayToChange;
             //if (datesArr.Length < 2)
             //    rtnValue = Convert.ToString(Convert.ToInt32(datesArr[0]) - 1);
             //else
             //    rtnValue = "Период отчета: с " + Convert.ToString(Convert.ToInt32(datesArr[0]) - 1) + " по " + Convert.ToString(Convert.ToInt32(datesArr[datesArr.Length - 2]) - 1);
 
-
-            if (datesArr.Length < 2)
+            if (datesArr.Length <= 2)
             {
-                rtnValue = datesArr[0];
-                day = rtnValue.Split('-');
+                date = datesArr[0];
+                day = date.Split('-');
                 dayToChange = Convert.ToInt32(day[0]);
                 dayToChange--;
-                rtnValue = rtnValue.Substring(0, 2);
-                rtnValue = Convert.ToString(dayToChange) + rtnValue;
+                date = date.Substring(2, 3);
+                rtnValue = Convert.ToString(dayToChange) + date;
             }
             else
             {
-                rtnValue = "Период отчета: с " + datesArr[0] + " по " + datesArr[datesArr.Length - 2];
-                MessageBox.Show(rtnValue);
-                MessageBox.Show(Convert.ToString(rtnValue.IndexOf('с')));
-                MessageBox.Show(Convert.ToString(rtnValue.IndexOf("по")));
-                day = rtnValue.Split('-');
+                date = datesArr[0];
+                day = date.Split('-');
                 dayToChange = Convert.ToInt32(day[0]);
                 dayToChange--;
-                lastDayToChange = Convert.ToInt32(day[1]);
-                lastDayToChange--;
-                rtnValue = rtnValue.Substring(16, 2);
-                rtnValue = Convert.ToString(dayToChange) + rtnValue;
-                rtnValue = rtnValue.Substring(25, 2);
-                rtnValue = rtnValue.Insert(25, Convert.ToString(lastDayToChange));
-                
+                date = date.Substring(2, 3);
+                rtnValue = "Период отчета: с " + Convert.ToString(dayToChange) + date;
+                date = datesArr[datesArr.Length - 2];
+                day = date.Split('-');
+                dayToChange = Convert.ToInt32(day[0]);
+                dayToChange--;
+                date = date.Substring(2, 3);
+                rtnValue = rtnValue +  " по " + Convert.ToString(dayToChange) + date;
             }
 
             return rtnValue;
